@@ -18,7 +18,7 @@ class Item {
     }
 }
 
-$categories = @('Simple Melee', 'Simple Ranged', 'Martial Melee')
+$categories = @('Simple Melee', 'Simple Ranged', 'Martial Melee', 'Martial Ranged')
 
 $SimpleMelee = @(
     [Item]::new("Club", "1 sp.", "1d4 bludgeon", 2, "Light"),
@@ -58,6 +58,13 @@ $MartialMelee = @(
     [Item]::new("War hammer", "15 gp", "1d8 bludgeoning", 2, "-")
 )
 
+$MartialRanged = @(
+    [Item]::new("Blowgun", "10 gp.", "1 piercing", 1, "Ammunition (range 25/100), loading"),
+    [Item]::new("Crossbow, hand", "75 gp.", "1d6 piercing", 3, "Ammunition (range 30/120), light, loading"),
+    [Item]::new("Crossbow, heavy", "50 gp.", "1d10 piercing", 18, "Ammunition (range 100/400), heavy, loading, two-handed"),
+    [Item]::new("Longbow", "50 gp.", "1d8 piercing", 2, "Ammunition (range 150/600), heavy, two-handed")
+)    
+
 function Get-DnDItem {
     $itemType = Get-Random -InputObject $categories
 
@@ -88,9 +95,16 @@ function Get-DnDItem {
             $itemWeight = $item.Weight
             $itemProperties = $item.Properties
 		}	
-	}	
-	
 
+        'Martial Ranged' {
+            $item = Get-Random -InputObject $MartialMelee
+            $itemName = $item.Name
+            $itemCost = $item.Cost
+            $itemDamage = $item.Damage
+            $itemWeight = $item.Weight
+            $itemProperties = $item.Properties
+		}	
+	}	
     # Consistent formatted output box
     $template = @"
 	
@@ -119,7 +133,6 @@ function Get-DnDItem {
 
     # Display the formatted item information
     Write-Host $template
-
 }
 
 # Generate a random D&D item
