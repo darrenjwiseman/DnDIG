@@ -23,14 +23,14 @@ $categories = @('Simple Melee', 'Simple Ranged', 'Martial Melee', 'Martial Range
 $SimpleMelee = @(
     [Item]::new("Club", "1 sp.", "1d4 bludgeon", 2, "Light"),
     [Item]::new("Dagger", "2 gp.", "1d4 pierce", 1, "Finesse, Light, Thrown (range 20/60)")
-	[Item]::new("Greatclub", "2 sp.", "1d8 bludgeoning", 10, "Two-handed"),
+    [Item]::new("Greatclub", "2 sp.", "1d8 bludgeoning", 10, "Two-handed"),
     [Item]::new("Handaxe", "5 gp.", "1d6 slashing", 2, "Light, thrown (range 20/60)"),
     [Item]::new("Javelin", "5 sp.", "1d6 piercing", 2, "Thrown (range 30/120)"),
     [Item]::new("Hammer, light", "2 gp.", "1d4 bludgeoning", 2, "Light, thrown (range 20/60)"),
     [Item]::new("Mace", "5 gp.", "1d6 bludgeoning", 4, "-"),
     [Item]::new("Quarterstaff", "2 sp.", "1d6 bludgeoning", 4, "Versatile (1d8)"),
     [Item]::new("Sickle", "1 gp.", "1d4 slashing", 2, "Light")
-    )
+)
 
 $SimpleRanged = @(
     [Item]::new("Crossbow, light", "25 gp.", "1d8 piercing", 5, "Ammunition (range 80/320), loading, two-handed"),
@@ -77,7 +77,7 @@ function Get-DnDItem {
             $itemWeight = $item.Weight
             $itemProperties = $item.Properties
         }
-		
+        
         'Simple Ranged' {
             $item = Get-Random -InputObject $SimpleRanged
             $itemName = $item.Name
@@ -85,16 +85,16 @@ function Get-DnDItem {
             $itemDamage = $item.Damage
             $itemWeight = $item.Weight
             $itemProperties = $item.Properties
-		}	
-		
-		'Martial Melee' {
+        }	
+        
+        'Martial Melee' {
             $item = Get-Random -InputObject $MartialMelee
             $itemName = $item.Name
             $itemCost = $item.Cost
             $itemDamage = $item.Damage
             $itemWeight = $item.Weight
             $itemProperties = $item.Properties
-		}	
+        }	
 
         'Martial Ranged' {
             $item = Get-Random -InputObject $MartialRanged
@@ -103,11 +103,11 @@ function Get-DnDItem {
             $itemDamage = $item.Damage
             $itemWeight = $item.Weight
             $itemProperties = $item.Properties
-		}	
-	}	
+        }	
+    }	
     # Consistent formatted output box
     $template = @"
-	
+    
  o()xxxx[{::::::::::::::::::::::::::::>
 
 +=======================================================+
