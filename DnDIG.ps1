@@ -97,7 +97,6 @@ function Get-DnDItem {
 		}	
 
         'Martial Ranged' {
-            $item = Get-Random -InputObject $MartialMelee
             $itemName = $item.Name
             $itemCost = $item.Cost
             $itemDamage = $item.Damage
