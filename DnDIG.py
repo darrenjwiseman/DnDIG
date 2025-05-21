@@ -2,7 +2,7 @@
 # By Darren Wiseman 5/18
 import random
 from dataclasses import dataclass
-import random
+import re
 
 @dataclass
 class Item:
@@ -62,13 +62,16 @@ categories = {
 	]
 }
 
+def strip_ansi_codes(s):
+    return re.sub(r'\033\[[\d;]*m', '', s)
+
 def get_random_item(category):
     random.shuffle(categories[category])
     item = categories[category][0]
     
     content_lines = [
         f"Thoust hath found a {category.strip()}",
-        f"Name: {item.name}",
+        f"Name: \033[1m{item.name}\033[0m",
         f"Damage: {item.damage}",
         f"Cost: {item.cost}",
         f"Weight: {item.weight} lbs",
@@ -82,18 +85,28 @@ def get_random_item(category):
     else:
         content_lines += ["  - none"]
 
-    max_content_width = max(len(line) for line in content_lines)
+    max_content_width = max(len(strip_ansi_codes(line)) for line in content_lines)
     box_width = max_content_width + 4
     horizontal = '═' * (box_width - 2)
 
     template = [
         f"╔{horizontal}╗",
-        f"║ {content_lines[0].center(box_width - 4)} ║",
-        f"╠{horizontal}╣",
-        *[f"║ {line.ljust(box_width - 4)} ║" for line in content_lines[1:]],
-        f"╚{horizontal}╝"
     ]
+    
+    # Process title line
+    visible_length = len(strip_ansi_codes(content_lines[0]))
+    visible = strip_ansi_codes(content_lines[0]).center(box_width - 4)
+    template.append(f"║ {content_lines[0].replace(strip_ansi_codes(content_lines[0]), visible)} ║")
+    template.append(f"╠{horizontal}╣")  # Moved separator here
 
+    # Process remaining lines
+    for line in content_lines[1:]:
+        visible_length = len(strip_ansi_codes(line))
+        padding_needed = box_width - 4 - visible_length
+        template.append(f"║ {line}{' ' * padding_needed} ║")
+
+    template.append(f"╚{horizontal}╝")
+    
     print('\n'.join(template))
     return item
 
