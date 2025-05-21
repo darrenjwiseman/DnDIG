@@ -14,7 +14,7 @@ class Item:
 	properties: str = ''
 
 categories = {
-	'Simple Melee weapon   ': [
+	'Simple Melee': [
 		Item("Club", "1 sp.", "1d4 bludgeon", 2, "Slow", "Light"),
 		Item("Dagger", "2 gp.", "1d4 pierce", 1, "Nick", "Finesse, Light, Thrown (range 20/60)"),
 		Item("Greatclub", "2 sp.", "1d8 bludgeoning", 10, "Push", "Two-handed"),
@@ -26,13 +26,13 @@ categories = {
 		Item("Sickle", "1 gp.", "1d4 slashing", 2, "Nick", "Light"),
 		Item("Spear", "1 gp.", "1d6 piercing", 3, "Sap", "Versatile (1d8), Thrown (range 20/60)")
 	],
-	'Simple Ranged weapon  ': [
+	'Simple Ranged': [
         Item("Crossbow, Light", "25 gp.", "1d8 piercing", 5, "Slow", "Loading, Two-handed, Ammunition (range 80/320)"),
 		Item("Dart", "5 cp.", "1d4 piercing", 0.25, "Vex", "Finesse, Thrown (range 20/60)"),
 		Item("Shortbow", "25 gp.", "1d6 piercing", 2, "Vex", "Two-handed, Ammunition (range 80/320)"),
 		Item("Sling", "1 sp.", "1d4 bludgeoning", 0, "Slow", "Ammunition (range 30/120)")
 	],
-	'Martial Melee weapon  ': [
+	'Martial Melee': [
         Item("Battleaxe", "10 gp", "1d8 slashing", 4, "Topple", "Versatile (1d10)"),
         Item("Flail", "10 gp", "1d8 bludgeoning", 2, "Sap", "none"),
         Item("Glaive", "20 gp", "1d10 slashing", 6, "Graze", "Heavy, Reach, Two-handed"),
@@ -52,7 +52,7 @@ categories = {
         Item("War pick", "5 gp", "1d8 piercing", 2, "Sap", "none"),
         Item("Whip", "5 gp", "1d4 slashing", 2, "Slow", "Finesse, Reach"),
 	],
-	'Martial Ranged weapon ': [
+	'Martial Ranged': [
 		Item("Blowgun", "10 gp.", "1 piercing", 1, "Vex", "Loading, Ammunition (range 25/100)"),
 		Item("Crossbow, hand", "75 gp.", "1d6 piercing", 3, "Vex", "Light, Loading, Ammunition (range 30/120)"),
 		Item("Crossbow, heavy", "50 gp.", "1d10 piercing", 18, "Push","Heavy, Loading, Two-handed, Ammunition (range 100/400)"),
@@ -70,10 +70,10 @@ def get_random_item(category):
     item = categories[category][0]
     
     content_lines = [
-        f"Thoust hath found a {category.strip()}",
-        f"Name: \033[1m{item.name}\033[0m",
+        f"\033[1m{item.name}\033[0m",
+        f"Proficiency: {category.strip()}",
         f"Damage: {item.damage}",
-        f"Cost: {item.cost}",
+        f"Cost: \033[33m{item.cost}\033[0m",
         f"Weight: {item.weight} lbs",
         f"Mastery: {item.mastery}"
     ]
