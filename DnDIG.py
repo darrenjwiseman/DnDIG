@@ -100,7 +100,7 @@ def get_material(item):
 
 def create_material_frame(material):
     content_lines = [
-        f"Crafted from: {material.name}",
+        f"{material.name}",  # This line was modified to add bold
         f"Price Modifier: \033[38;5;178m×{material.price_mod}\033[0m",
         f"Weight Modifier: ×{material.weight_mod}",
         "Effects:"
@@ -118,10 +118,17 @@ def create_material_frame(material):
 
     template = [
         f"╔{horizontal}╗",
-        f"║ {content_lines[0].center(box_width - 4)} ║",
-        f"╠{horizontal}╣"
     ]
     
+    # MODIFIED SECTION - This is the key change
+    visible_text = strip_ansi_codes(content_lines[0])
+    visible_centered = visible_text.center(box_width - 4)
+    bold_centered = f"\033[1m{visible_centered}\033[0m"
+    template.append(f"║ {bold_centered} ║")
+    # END MODIFIED SECTION
+
+    template.append(f"╠{horizontal}╣")
+
     for line in content_lines[1:]:
         visible_length = len(strip_ansi_codes(line))
         padding_needed = box_width - 4 - visible_length
