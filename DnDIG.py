@@ -100,7 +100,7 @@ def get_material(item):
 
 def create_material_frame(material):
     content_lines = [
-        f"\033[1m{material.name}\033[0m",
+        f"Crafted from: {material.name}",
         f"Price Modifier: \033[38;5;178m×{material.price_mod}\033[0m",
         f"Weight Modifier: ×{material.weight_mod}",
         "Effects:"
