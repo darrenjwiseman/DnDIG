@@ -1,8 +1,12 @@
-# %%
 # By Darren Wiseman 5/18
 import random
 from dataclasses import dataclass
 import re
+import os
+
+def clear_screen():
+    """Clear terminal screen cross-platform"""
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 @dataclass
 class Item:
@@ -141,6 +145,8 @@ def strip_ansi_codes(s):
     return re.sub(r'\033\[[\d;]*m', '', s)
 
 def get_random_item(category):
+    clear_screen()  # Added screen clear before display
+    
     random.shuffle(categories[category])
     item = categories[category][0]
     
