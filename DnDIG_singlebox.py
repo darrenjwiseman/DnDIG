@@ -103,45 +103,6 @@ def get_material(item):
     # Return rarest material (lowest rarity value)
     return min(results, key=lambda x: x.rarity)
 
-def create_material_frame(material):
-    content_lines = [
-        f"{material.name}",  # This line was modified to add bold
-        f"Price Modifier: \033[38;5;178m×{material.price_mod}\033[0m",
-        f"Weight Modifier: ×{material.weight_mod}",
-        "Effects:"
-    ]
-    
-    # Handle effects as bullet points
-    if material.effect:
-        content_lines += [f"  - {eff.strip()}" for eff in material.effect.split(',')]
-    else:
-        content_lines += ["  - none"]
-
-    max_content_width = max(len(strip_ansi_codes(line)) for line in content_lines)
-    box_width = max_content_width + 4
-    horizontal = '═' * (box_width - 2)
-
-    template = [
-        f"╔{horizontal}╗",
-    ]
-    
-    # MODIFIED SECTION - This is the key change
-    visible_text = strip_ansi_codes(content_lines[0])
-    visible_centered = visible_text.center(box_width - 4)
-    bold_centered = f"\033[1m{visible_centered}\033[0m"
-    template.append(f"║ {bold_centered} ║")
-    # END MODIFIED SECTION
-
-    template.append(f"╠{horizontal}╣")
-
-    for line in content_lines[1:]:
-        visible_length = len(strip_ansi_codes(line))
-        padding_needed = box_width - 4 - visible_length
-        template.append(f"║ {line}{' ' * padding_needed} ║")
-
-    template.append(f"╚{horizontal}╝")
-    return '\n'.join(template)
-
 def strip_ansi_codes(s):
     return re.sub(r'\033\[[\d;]*m', '', s)
 
@@ -151,14 +112,37 @@ def get_random_item(category):
     random.shuffle(categories[category])
     item = categories[category][0]
     
+    material = get_material(item)
+    if material:
+        weapon_name = f"{material.name} {item.name}"
+    else:
+        weapon_name = item.name
+    
     content_lines = [
-        f"\033[1m{item.name}\033[0m",
+        f"\033[1m{weapon_name}\033[0m",
         f"Proficiency: {category.strip()}",
         f"Damage: {item.damage}",
-        f"Cost: \033[38;5;178m{item.cost}\033[0m",
-        f"Weight: {item.weight} lbs",
-        f"Mastery: {item.mastery}"
     ]
+    
+    # Handle cost and weight modification from material
+    if material:
+        item_cost, item_denom = item.cost.split()
+        item_cost = float(item_cost)
+        modified_cost = f"{material.price_mod * item_cost:g} {item_denom.rstrip('.')}."  # Use original denomination and remove trailing "."
+        actual_cost = f" (Base: {item.cost})"
+        actual_weight = f" (Base: {item.weight} lbs)"
+        modified_weight = f"{material.weight_mod * item.weight:g} lbs".rstrip(".0")
+        content_lines += [
+            f"Cost: \033[38;5;178m{modified_cost}\033[0m{actual_cost}",
+            f"Weight: {modified_weight}{actual_weight}",
+        ]
+    else:
+        content_lines += [
+            f"Cost: \033[38;5;178m{item.cost}\033[0m",
+            f"Weight: {item.weight} lbs.",
+        ]
+
+    content_lines += [f"Mastery: {item.mastery}"]
     
     # Handle properties as bullet points only
     content_lines.append("Properties:")
@@ -167,7 +151,21 @@ def get_random_item(category):
     else:
         content_lines += ["  - none"]
 
-    max_content_width = max(len(strip_ansi_codes(line)) for line in content_lines)
+    # Add Material section if applicable
+    if material:
+        content_lines.append("")
+        content_lines.append("Material Effects:")
+        content_lines += [f"  - {eff.strip()}" for eff in material.effect.split(',')]
+
+    # Ensure max_content_width is not too narrow
+    max_content_width = 2 # minimum width to ensure it doesn't go below 2
+    for line in content_lines:
+        visible_length = len(strip_ansi_codes(line))
+        if '"' in line: # Adjust width for wrapping
+            max_content_width = max(max_content_width, visible_length // 2)
+        else:
+            max_content_width = max(max_content_width, visible_length)
+
     box_width = max_content_width + 4
     horizontal = '═' * (box_width - 2)
 
@@ -189,32 +187,8 @@ def get_random_item(category):
 
     template.append(f"╚{horizontal}╝")
     
-    material = get_material(item)
-    item_box = '\n'.join(template)
+    print('\n'.join(template))
     
-    if material:
-        material_box = create_material_frame(material)
-        item_lines = item_box.split('\n')
-        material_lines = material_box.split('\n')
-        
-        # Calculate maximum VISIBLE width of item box (stripping ANSI)
-        max_item_width = max(len(strip_ansi_codes(line)) for line in item_lines)
-        
-        # Combine boxes with proper ANSI-aware padding
-        combined = []
-        for i in range(max(len(item_lines), len(material_lines))):
-            item_line = item_lines[i] if i < len(item_lines) else ''
-            mat_line = material_lines[i] if i < len(material_lines) else ''
-            
-            # Calculate padding based on VISIBLE characters only
-            padding_needed = max_item_width - len(strip_ansi_codes(item_line))
-            combined_line = f"{item_line}{' ' * padding_needed}{mat_line}"
-            combined.append(combined_line)
-
-        print('\n'.join(combined))
-    else:
-        print(item_box)
-        
     return item
 
 # Generate and display random item
