@@ -71,7 +71,7 @@ categories = load_categories_from_files()
 
 def load_material_data(data_dir="weapon_data"):
     materials = []
-    data_path = pathlib.Path(data_dir) / "material_data.txt"
+    data_path = pathlib.Path(data_dir) / "Material_Data.txt"
     
     if not data_path.exists():
         return {'Special Materials': materials}
@@ -87,13 +87,15 @@ def load_material_data(data_dir="weapon_data"):
                 continue
             
             try:
+                # Join all properties beyond index 4 into a single effect string
+                effect_str = ",".join(parts[5:]) if len(parts) > 5 else ""
                 materials.append(Special(
                     name=parts[0],
                     category=parts[1],
                     rarity=int(parts[2]),
                     price_mod=float(parts[3]),
                     weight_mod=float(parts[4]),
-                    effect=parts[5] if len(parts) > 5 else ""
+                    effect=effect_str
                 ))
             except Exception as e:
                 print(f"ERROR: Failed to parse line {line_num}: {e}")
