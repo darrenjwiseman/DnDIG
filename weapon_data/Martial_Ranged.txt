@@ -1,0 +1,7 @@
+# name, cost, damage, weight, mastery, properties, material
+Blowgun, 10 gp., 1 piercing, 1, Vex, "Loading, Ammunition (range 25/100)", W
+Crossbow, hand, 75 gp., 1d6 piercing, 3, Vex, "Light, Loading, Ammunition (range 30/120)", W
+Crossbow, heavy, 50 gp., 1d10 piercing, 18, Push, "Heavy, Loading, Two-handed, Ammunition (range 100/400)", W
+Longbow, 50 gp., 1d8 piercing, 2, Slow, "Heavy, Two-handed, Ammunition (range 150/600)", W
+Musket, 500 gp., 1d12 piercing, 10, Slow, "Loading, Two-Handed, Ammunition (Range 40/120)", M
+Pistol, 250 gp., 1d10 piercing, 3, Vex, "Loading, Ammunition (range 30/90)", M

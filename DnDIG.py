@@ -4,6 +4,8 @@ from dataclasses import dataclass
 import re
 import os
 import argparse
+import pathlib
+import csv
 
 def clear_screen():
     """Clear terminal screen cross-platform"""
@@ -12,7 +14,7 @@ def clear_screen():
 @dataclass
 class Item:
     name: str
-    cost: str
+    cost: str 
     damage: str
     weight: float
     mastery: str = ''
@@ -28,69 +30,79 @@ class Special:
     weight_mod: float
     effect: str = ''
 
-categories = {
-    'Simple Melee': [
-        Item("Club", "1 sp.", "1d4 bludgeon", 2, "Slow", "Light", "W"),
-        Item("Dagger", "2 gp.", "1d4 pierce", 1, "Nick", "Finesse, Light, Thrown (range 20/60)", "M"),
-        Item("Greatclub", "2 sp.", "1d8 bludgeoning", 10, "Push", "Two-handed", "W"),
-        Item("Handaxe", "5 gp.", "1d6 slashing", 2, "Vex", "Light, Thrown (range 20/60)", "M"),
-        Item("Javelin", "5 sp.", "1d6 piercing", 2, "Slow", "Thrown (range 30/120)", "M"),
-        Item("Hammer, Light", "2 gp.", "1d bludgeoning", 2, "Nick", "Light, Thrown (range 20/60)", "M"),
-        Item("Mace", "5 gp.", "1d6 bludgeoning", 4, "Sap", "none", "M"),
-        Item("Quarterstaff", "2 sp.", "1d6 bludgeoning", 4, "Topple", "Versatile (1d8)", "W"),
-        Item("Sickle", "1 gp.", "1d4 slashing", 2, "Nick", "Light", "M"),
-        Item("Spear", "1 gp.", "1d6 piercing", 3, "Sap", "Versatile (1d8), Thrown (range 20/60)", "M")
-    ],
-    'Simple Ranged': [
-        Item("Crossbow, Light", "25 gp.", "1d8 piercing", 5, "Slow", "Loading, Two-handed, Ammunition (range 80/320)", "W"), 
-        Item("Dart", "5 cp.", "1d4 piercing", 0.25, "Vex", "Finesse, Thrown (range 20/60)", "M"),
-        Item("Shortbow", "25 gp.", "1d6 piercing", 2, "Vex", "Two-handed, Ammunition (range 80/320)", "W"),
-        Item("Sling", "1 sp.", "1d4 bludgeoning", 0, "Slow", "Ammunition (range 30/120)", "O")
-    ],
-    'Martial Melee': [
-        Item("Battleaxe", "10 gp", "1d8 slashing", 4, "Topple", "Versatile (1d10)", "M"),
-        Item("Flail", "10 gp", "1d8 bludgeoning", 2, "Sap", "none", "M"),
-        Item("Glaive", "20 gp", "1d10 slashing", 6, "Graze", "Heavy, Reach, Two-handed", "M"),
-        Item("Greataxe", "30 gp", "1d12 slashing", 7, "Cleave", "Heavy, Two-handed", "M"),
-        Item("Greatsword", "50 gp", "2d6 slashing", 6, "Graze", "Heavy, Two-handed", "M"),
-        Item("Halberd", "20 gp", "1d10 slashing", 6, "Cleave", "Heavy, Reach, Two-handed", "M"),
-        Item("Lance", "10 gp", "1d12 piercing", 6, "Topple", "Heavy, Reach, Two-handed", "W"),
-        Item("Longsword", "15 gp", "1d8 slashing", 3, "Sap", "Versatile (1d10)", "M"),
-        Item("Morningstar", "15 gp", "1d8 piercing", 4, "Sap", "none", "M"),
-        Item("Pike", "5 gp", "1d10 piercing", 18, "Push", "Heavy, Reach, Two-handed (unless mounted)", "M"),
-        Item("Rapier", "25 gp", "1d8 piercing", 2, "Vex", "Finesse", "M"),
-        Item("Scimitar", "25 gp", "1d6 slashing", 3, "Nick", "Finesse, Light", "M"),
-        Item("Shortsword", "10 gp", "1d6 piercing", 2, "Vex", "Finesse, Light", "M"),
-        Item("Trident", "5 gp", "1d6 piercing", 4, "Topple", "Versatile (1d8), Thrown (range 20/60)", "M"),
-        Item("War hammer", "15 gp", "1d8 bludgeoning", 2, "Push", "none", "M"),
-        Item("War pick", "5 gp", "1d8 piercing", 2, "Sap", "none", "M"),
-        Item("Whip", "5 gp", "1d4 slashing", 2, "Slow", "Finesse, Reach", "O"),
-    ],
-    'Martial Ranged': [
-        Item("Blowgun", "10 gp.", "1 piercing", 1, "Vex", "Loading, Ammunition (range 25/100)", "W"),
-        Item("Crossbow, hand", "75 gp.", "1d6 piercing", 3, "Vex", "Light, Loading, Ammunition (range 30/120)", "W"),
-        Item("Crossbow, heavy", "50 gp.", "1d10 piercing", 18, "Push","Heavy, Loading, Two-handed, Ammunition (range 100/400)", "W"),
-        Item("Longbow", "50 gp.", "1d8 piercing", 2, "Slow","Heavy, Two-handed, Ammunition (range 150/600)", "W"),
-        Item("Musket", "500 gp.", "1d12 piercing", 10, "Slow","Loading, Two-Handed, Ammunition (Range 40/120)", "M"),
-        Item("Pistol", "250 gp.", "1d10 piercing", 3, "Vex","Loading, Ammunition (range 30/90)", "M")
-    ]
-}
+def load_categories_from_files(data_dir="weapon_data"):
+    categories = {}
+    data_path = pathlib.Path(data_dir)
 
-material_data = {
-    'Special Materials': [
-        Special("Flametouched Iron", "M", 3, 7, 1.5, "[+1] Save against spells/abilities from Evil sources, Weapon is Good aligned"),
-        Special("Adamantine", "M", 5, 5, 1.75, "piercing weapons get [+1] damage, Negate DR: Constructs"),
-        Special("Byeshk", "M", 2, 7, 1.25, "bludgeoning weapons get [+1] damage, Negate DR: Aberrations"),
-        Special("Mournlode", "M", 2, 7, 1.0, "[+1] to hit against Undead, Undead cannot reanimate if destroyed"),
-        Special("Densewood", "W", 7, 2, 2.0, "bludgeoning weapons get [+1] damage, +5 DC to break/destroy"),
-        Special("Eldritch Whorlwood", "W", 5, 4, 1.0, "No penalty to hit: Ethereal creatures"),
-        Special("Bone", "W", 11, 0.5, 1.5, "[-1] Charisma while weilding, On natural 1 to hit: DC 10 Dex save or weapon is destroyed"),
-        Special("Antler", "W", 9, 0.7, 1.2, "On natural 1 to hit: DC 10 Dex save or weapon is destroyed"),
-        Special("Wrought Iron", "M", 11, 0.5, 2.0, "On natural 1 to hit: DC 10 Dex save or weapon is destroyed"),
-        Special("Bronze", "M", 9, 0.7, 1.5, "On natural 1 to hit: DC 10 Dex save or weapon is destroyed"),
-        # Special("Luna's Truckerdump", "M", 100, 1, 1.0, "Now your weapon is poopy & smelly, [+10] damage")
-    ]
-}
+    # Filter out material_data.txt from processing
+    for file_path in [f for f in data_path.glob("*.txt") if f.name != "Material_Data.txt"]:
+        category_name = file_path.stem.replace("_", " ")
+        items = []
+        
+        with open(file_path, "r") as f:
+            reader = csv.reader(f, skipinitialspace=True)
+            for line_num, parts in enumerate(reader, 1):
+                if not parts or parts[0].startswith("#"):
+                    continue
+                
+                if len(parts) < 4:
+                    print(f"WARNING: Skipping invalid line {line_num} in {file_path}")
+                    continue
+                
+                try:
+                    items.append(Item(
+                        name=parts[0],
+                        cost=parts[1],
+                        damage=parts[2],
+                        weight=float(parts[3]),
+                        mastery=parts[4] if len(parts) > 4 else "",
+                        properties=parts[5] if len(parts) > 5 else "",
+                        material=parts[6] if len(parts) > 6 else ""
+                    ))
+                except Exception as e:
+                    print(f"ERROR: Failed to parse line {line_num}: {e}")
+                    continue
+        
+        categories[category_name] = items
+    
+    return categories
+
+categories = load_categories_from_files()
+
+def load_material_data(data_dir="weapon_data"):
+    materials = []
+    data_path = pathlib.Path(data_dir) / "material_data.txt"
+    
+    if not data_path.exists():
+        return {'Special Materials': materials}
+    
+    with open(data_path, "r") as f:
+        reader = csv.reader(f, skipinitialspace=True)
+        for line_num, parts in enumerate(reader, 1):
+            if not parts or parts[0].startswith("#"):
+                continue
+            
+            if len(parts) < 5:
+                print(f"WARNING: Skipping invalid line {line_num} in {data_path}")
+                continue
+            
+            try:
+                materials.append(Special(
+                    name=parts[0],
+                    category=parts[1],
+                    rarity=int(parts[2]),
+                    price_mod=float(parts[3]),
+                    weight_mod=float(parts[4]),
+                    effect=parts[5] if len(parts) > 5 else ""
+                ))
+            except Exception as e:
+                print(f"ERROR: Failed to parse line {line_num}: {e}")
+                continue
+    
+    return {'Special Materials': materials}
+
+# Replace hardcoded material_data with file-loaded version
+material_data = load_material_data()
 
 def get_material(item):
     # Add global declaration to access the flag

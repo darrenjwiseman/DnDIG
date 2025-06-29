@@ -1,0 +1,11 @@
+# name, cost, damage, weight, mastery, properties, material
+Club, 1 sp., 1d4 bludgeon, 2, Slow, Light, W
+Dagger, 2 gp., 1d4 pierce, 1, Nick, "Finesse, Light, Thrown (range 20/60)", M
+Greatclub, 2 sp., 1d8 bludgeoning, 10, Push, Two-handed, W
+Handaxe, 5 gp., 1d6 slashing, 2, Vex, "Light, Thrown (range 20/60)", M
+Javelin, 5 sp., 1d6 piercing, 2, Slow, "Thrown (range 30/120)", M
+Hammer, Light, 2 gp., 1d bludgeoning, 2, Nick, "Light, Thrown (range 20/60)", M
+Mace, 5 gp., 1d6 bludgeoning, 4, Sap, none, M
+Quarterstaff, 2 sp., 1d6 bludgeoning, 4, Topple, "Versatile (1d8)", W
+Sickle, 1 gp., 1d4 slashing, 2, Nick, Light, M
+Spear, 1 gp., 1d6 piercing, 3, Sap, "Versatile (1d8), Thrown (range 20/60)", M

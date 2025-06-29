@@ -1,0 +1,5 @@
+# name, cost, damage, weight, mastery, properties, material
+Crossbow, Light, 25 gp., 1d8 piercing, 5, Slow, "Loading, Two-handed, Ammunition (range 80/320)", W
+Dart, 5 cp., 1d4 piercing, 0.25, Vex, "Finesse, Thrown (range 20/60)", M
+Shortbow, 25 gp., 1d6 piercing, 2, Vex, "Two-handed, Ammunition (range 80/320)", W
+Sling, 1 sp., 1d4 bludgeoning, 0, Slow, "Ammunition (range 30/120)", O

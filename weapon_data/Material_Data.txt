@@ -1,0 +1,11 @@
+# Format: Name, Category(W/M), Rarity(1-100), PriceMod, WeightMod, [Effect]
+Flametouched Iron,M,3,7,1.5,[+1] Save vs Evil, Good aligned
+Adamantine,M,5,5,1.75,piercing weapons get [+1] damage, Negate DR: Constructs
+Byeshk,M,2,7,1.25,bludgeoning weapons get [+1] damage, Negate DR: Aberrations
+Mournlode,M,2,7,1.0,[+1] to hit against Undead, Undead cannot reanimate if destroyed
+Densewood,W,7,2,2.0,bludgeoning weapons get [+1] damage, +5 DC to break/destroy
+Eldritch Whorlwood,W,5,4,1.0,No penalty vs: Ethereal creatures
+Bone,W,11,0.5,1.5,[-1] Charisma, Nat 1 to hit: DC 10 Dex or destroyed
+Antler,W,9,0.7,1.2,Nat 1 to hit: DC 10 Dex or destroyed
+Wrought Iron,M,11,0.5,2.0,Nat 1 to hit: DC 10 Dex or destroyed
+Bronze,M,9,0.7,1.5,Nat 1 to hit: DC 10 Dex or destroyed

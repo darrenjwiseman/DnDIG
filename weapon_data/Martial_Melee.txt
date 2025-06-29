@@ -1,0 +1,18 @@
+# name, cost, damage, weight, mastery, properties, material
+Battleaxe, 10 gp, 1d8 slashing, 4, Topple, "Versatile (1d10)", M
+Flail, 10 gp, 1d8 bludgeoning, 2, Sap, none, M
+Glaive, 20 gp, 1d10 slashing, 6, Graze, "Heavy, Reach, Two-handed", M
+Greataxe, 30 gp, 1d12 slashing, 7, Cleave, "Heavy, Two-handed", M
+Greatsword, 50 gp, 2d6 slashing, 6, Graze, "Heavy, Two-handed", M
+Halberd, 20 gp, 1d10 slashing, 6, Cleave, "Heavy, Reach, Two-handed", M
+Lance, 10 gp, 1d12 piercing, 6, Topple, "Heavy, Reach, Two-handed", W
+Longsword, 15 gp, 1d8 slashing, 3, Sap, "Versatile (1d10)", M
+Morningstar, 15 gp, 1d8 piercing, 4, Sap, none, M
+Pike, 5 gp, 1d10 piercing, 18, Push, "Heavy, Reach, Two-handed (unless mounted)", M
+Rapier, 25 gp, 1d8 piercing, 2, Vex, Finesse, M
+Scimitar, 25 gp, 1d6 slashing, 3, Nick, "Finesse, Light", M
+Shortsword, 10 gp, 1d6 piercing, 2, Vex, "Finesse, Light", M
+Trident, 5 gp, 1d6 piercing, 4, Topple, "Versatile (1d8), Thrown (range 20/60)", M
+War hammer, 15 gp, 1d8 bludgeoning, 2, Push, none, M
+War pick, 5 gp, 1d8 piercing, 2, Sap, none, M
+Whip, 5 gp, 1d4 slashing, 2, Slow, "Finesse, Reach", O
